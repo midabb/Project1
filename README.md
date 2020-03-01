@@ -3,3 +3,4 @@
 # Requirements
   - Elasticsearch
   - Apache Tomcat Server
+  - Postman
