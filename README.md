@@ -1,5 +1,5 @@
 # Project1
 
 # Requirements
-  # Elasticsearch
-  # Apache Tomcat Server
+  - Elasticsearch
+  - Apache Tomcat Server
