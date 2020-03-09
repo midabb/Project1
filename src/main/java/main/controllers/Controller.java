@@ -1,6 +1,6 @@
 package main.controllers;
 
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,38 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thoughtworks.xstream.XStream;
 
-import main.model.PublshInformation;
 import main.model.SdnEntry;
 import main.model.SdnList;
 import main.service.SdnEntryService;
+import main.utils.SdnListUtils;
 
 @RestController
 class Controller {
 
 	@Autowired
 	SdnEntryService sdnEntryService;
-	
+
 	@Autowired
 	XStream xStream;
 
 	@PostConstruct
 	void init() {
 
-//		File file = new File("path/to/sdn.xml/from/main/resources");
-//
-//		xStream.alias("sdnList", SdnList.class);
-//		xStream.alias("publshInformation", PublshInformation.class);
-//		xStream.alias("sdnEntry", SdnEntry.class);
-//		// xStream.alias("sdnEntry", SdnEntry.class);
-//		SdnList sdnList = null;
-//		try {
-//
-//			sdnList = (SdnList) xStream.fromXML(file);
-//		} catch (Exception e) {
-//			e.getMessage();
-//		}
-//
-//		sdnEntryService.saveAll(sdnList.getSdnEntries());
+		SdnListUtils sdnUtils = new SdnListUtils(xStream);
+		SdnList sdnList = sdnUtils.refreshList();
+		sdnEntryService.saveAll(sdnList.getSdnEntries());
 
 	}
 
@@ -55,9 +43,22 @@ class Controller {
 	}
 
 	@GetMapping("/name")
-	List<SdnEntry> findByLastName(@RequestParam(name="name") String name) {
+	List<SdnEntry> findByLastName(@RequestParam(name = "name") String name) {
 
 		return sdnEntryService.findByLastName(name);
 
 	}
+
+	@GetMapping("/refresh")
+	void refresh() {
+		// first delete all content from elasticsearch index
+		sdnEntryService.deleteAll();
+
+		// download and parse xml file
+		SdnList list = new SdnListUtils(xStream).refreshList();
+
+		// save all entries
+		sdnEntryService.saveAll(list.getSdnEntries());
+	}
+
 }

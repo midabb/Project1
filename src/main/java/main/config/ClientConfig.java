@@ -22,7 +22,9 @@ public class ClientConfig extends AbstractElasticsearchConfiguration {
 
 	@Override
 	public RestHighLevelClient elasticsearchClient() {
+
 		return RestClients.create(ClientConfiguration.localhost()).rest();
+
 	}
 
 	@Bean
@@ -39,32 +41,24 @@ public class ClientConfig extends AbstractElasticsearchConfiguration {
 	public SdnEntryService sdnEntryServiceService() {
 		return new SdnEntryService();
 	}
-	
+
 	@Bean
-	public XStream xStream(){
-		XStream xs = new XStream(){
-		    @Override
-		    protected MapperWrapper wrapMapper(MapperWrapper next) {
-		        return new MapperWrapper(next) {
-		            @Override
-		            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-		                if (definedIn == Object.class) {
-		                    return false;
-		                }
-		                return super.shouldSerializeMember(definedIn, fieldName);
-		            }
-		        };
-		    }
+	public XStream xStream() {
+		XStream xs = new XStream() {
+			@Override
+			protected MapperWrapper wrapMapper(MapperWrapper next) {
+				return new MapperWrapper(next) {
+					@Override
+					public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+						if (definedIn == Object.class) {
+							return false;
+						}
+						return super.shouldSerializeMember(definedIn, fieldName);
+					}
+				};
+			}
 		};
 		xs.autodetectAnnotations(true);
 		return xs;
 	};
-	
-	
-	//
-	// @Bean
-	// public SdnListService sdnListService() {
-	// return new SdnListService();
-	// }
-
 }

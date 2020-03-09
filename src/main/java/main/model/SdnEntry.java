@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @Document(indexName = "entries", type = "entry", shards = 2)
 public class SdnEntry implements Serializable {
@@ -20,8 +20,8 @@ public class SdnEntry implements Serializable {
 	private String sdnType;
 	private String remarks;
 
-	@XStreamImplicit(itemFieldName = "program")
-	private List<String> programList;
+	@XStreamAlias( value = "programList")
+	private ProgramList programList;
 
 	private IdList idList;
 	private DateOfBirthList dateOfBirthList;
@@ -88,6 +88,12 @@ public class SdnEntry implements Serializable {
 	}
 	public void setAddressList(AddressList addressList) {
 		this.addressList = addressList;
+	}
+	public ProgramList getProgramList() {
+		return programList;
+	}
+	public void setProgramList(ProgramList programList) {
+		this.programList = programList;
 	}
 
 

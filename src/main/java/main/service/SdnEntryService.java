@@ -11,17 +11,22 @@ public class SdnEntryService {
 
 	@Autowired
 	ISdnEntryRepo iSdnEntryRepo;
-	
-	public Iterable<SdnEntry> findAll(){
+
+	public Iterable<SdnEntry> findAll() {
 		return iSdnEntryRepo.findAll();
 	}
-	
-	public List<SdnEntry> findByLastName(String name){
+
+	public List<SdnEntry> findByLastName(String name) {
 		return iSdnEntryRepo.findByLastName(name);
 	}
-	
-	public void saveAll(List<SdnEntry> entries){
+
+	public void saveAll(List<SdnEntry> entries) {
 		iSdnEntryRepo.saveAll(entries);
 	}
-	
+
+	public void deleteAll() {
+		iSdnEntryRepo.deleteAll();
+
+	}
+
 }
