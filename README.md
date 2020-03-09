@@ -10,6 +10,6 @@
   The same path will be used for reading data.
   
 # Methods description
-  all() - returns all entries from index
-  name() - querying entries by last name
-  refresh() - downloads latest version of sdn.xml from provided url and update index
+  - all() - returns all entries from index
+  - name() - querying entries by last name
+  - refresh() - downloads latest version of sdn.xml from provided url and update index
