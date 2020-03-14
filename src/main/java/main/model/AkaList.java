@@ -1,10 +1,11 @@
 package main.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-public class AkaList {
+public class AkaList implements Serializable {
 	/**
 	 * 
 	 */

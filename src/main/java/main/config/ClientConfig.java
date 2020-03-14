@@ -14,6 +14,9 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
+import main.service.EntityService;
+import main.service.IndividualService;
+import main.service.SanctionEntityService;
 import main.service.SdnEntryService;
 
 @Configuration
@@ -40,6 +43,21 @@ public class ClientConfig extends AbstractElasticsearchConfiguration {
 	@Bean
 	public SdnEntryService sdnEntryServiceService() {
 		return new SdnEntryService();
+	}
+
+	@Bean
+	public IndividualService individualService() {
+		return new IndividualService();
+	}
+
+	@Bean
+	public EntityService entityService() {
+		return new EntityService();
+	}
+	
+	@Bean
+	public SanctionEntityService sanctionEntityService() {
+		return new SanctionEntityService();
 	}
 
 	@Bean

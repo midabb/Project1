@@ -1,6 +1,5 @@
 package main.controllers;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +14,17 @@ import com.thoughtworks.xstream.XStream;
 
 import main.model.SdnEntry;
 import main.model.SdnList;
+import main.model.eu.Export;
+import main.model.eu.SanctionEntity;
+import main.model.un.ConsolidatedList;
+import main.model.un.Entity;
+import main.model.un.Individual;
+import main.service.EntityService;
+import main.service.IndividualService;
+import main.service.SanctionEntityService;
 import main.service.SdnEntryService;
+import main.utils.ConsolidatedListUtils;
+import main.utils.SanctionEntityUtils;
 import main.utils.SdnListUtils;
 
 @RestController
@@ -23,6 +32,15 @@ class Controller {
 
 	@Autowired
 	SdnEntryService sdnEntryService;
+
+	@Autowired
+	IndividualService individualService;
+
+	@Autowired
+	EntityService entityService;
+
+	@Autowired
+	SanctionEntityService sanctionEntityService;
 
 	@Autowired
 	XStream xStream;
@@ -34,7 +52,18 @@ class Controller {
 		SdnList sdnList = sdnUtils.refreshList();
 		sdnEntryService.saveAll(sdnList.getSdnEntries());
 
+		ConsolidatedListUtils consolidatedListUtils = new ConsolidatedListUtils(xStream);
+		ConsolidatedList consolidatedList = consolidatedListUtils.refreshList();
+		individualService.saveAll(consolidatedList.getIndividuals().getIndividuals());
+		entityService.saveAll(consolidatedList.getEntities().getEntities());
+
+		SanctionEntityUtils sanctionEntityUtils = new SanctionEntityUtils(xStream);
+		Export export = sanctionEntityUtils.refreshList();
+		sanctionEntityService.saveAll(export.getSanctionEntities());
+
 	}
+
+	// sdnList
 
 	@RequestMapping("/all")
 	Iterable<SdnEntry> findAll() {
@@ -50,7 +79,7 @@ class Controller {
 	}
 
 	@GetMapping("/refresh")
-	void refresh() {
+	String refresh() {
 		// first delete all content from elasticsearch index
 		sdnEntryService.deleteAll();
 
@@ -59,6 +88,74 @@ class Controller {
 
 		// save all entries
 		sdnEntryService.saveAll(list.getSdnEntries());
+
+		return "SUCCESS";
 	}
 
+	// Individual List
+	@RequestMapping("/allIndividuals")
+	Iterable<Individual> findAllIndividuals() {
+		return individualService.findAll();
+	}
+
+	@GetMapping("/nameIndividual")
+	List<Individual> findBySecondName(@RequestParam(name = "name") String name) {
+		return individualService.findBySecondName(name);
+	}
+
+	@GetMapping("/refreshIndividual")
+	String refreshIndividuals() {
+		individualService.deleteAll();
+
+		ConsolidatedList conList = new ConsolidatedListUtils(xStream).refreshList();
+		individualService.saveAll(conList.getIndividuals().getIndividuals());
+
+		return "SUCCESS";
+	}
+
+	// Entities List
+	@RequestMapping("/allEntities")
+	Iterable<Entity> findAllEntities() {
+		return entityService.findAll();
+	}
+
+	@GetMapping("/nameEntity")
+	List<Entity> findByFirstName(@RequestParam(name = "name") String name) {
+		return entityService.findByFirstName(name);
+	}
+
+	@GetMapping("/refreshEntities")
+	String refreshEntities() {
+		individualService.deleteAll();
+
+		ConsolidatedList conList = new ConsolidatedListUtils(xStream).refreshList();
+		entityService.saveAll(conList.getEntities().getEntities());
+
+		return "SUCCESS";
+	}
+
+	// Sanction Entities List
+	@RequestMapping("/allSanctionEntities")
+	Iterable<SanctionEntity> findAllSanctionEntities() {
+		return sanctionEntityService.findAll();
+	}
+
+	@GetMapping("/nameSanctionEntity")
+	List<SanctionEntity> findSanctionEntityByLastName(@RequestParam(name = "remark") String remark) {
+		return sanctionEntityService.findByRemark(remark);
+	}
+
+	@GetMapping("/refreshSanctionEntities")
+	String refreshSanctionEntities() {
+		// first delete all content from elasticsearch index
+		sanctionEntityService.deleteAll();
+
+		// download and parse xml file
+		Export export = new SanctionEntityUtils(xStream).refreshList();
+
+		// save all entries
+		sanctionEntityService.saveAll(export.getSanctionEntities());
+
+		return "SUCCESS";
+	}
 }

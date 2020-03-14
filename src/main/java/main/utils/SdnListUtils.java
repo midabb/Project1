@@ -13,6 +13,8 @@ import main.model.SdnEntry;
 import main.model.SdnList;
 
 public class SdnListUtils {
+	
+	private static final String path = "/Users/mida/Desktop/sdnList.xml";
 
 	private XStream xStream;
 
@@ -25,7 +27,7 @@ public class SdnListUtils {
 		try (BufferedInputStream inputStream = new BufferedInputStream(
 				new URL("https://www.treasury.gov/ofac/downloads/sdn.xml").openStream());
 				FileOutputStream fileOS = new FileOutputStream(
-						"path_to_folder_where_to_download_sdn.xml_file")) {
+						path)) {
 
 			byte data[] = new byte[1024];
 			int byteContent;
@@ -46,7 +48,7 @@ public class SdnListUtils {
 
 	public SdnList parseXMLFile() {
 
-		File file = new File("path_to_folder_where_you_downloaded_sdn.xml_file");
+		File file = new File(path);
 
 		xStream.alias("sdnList", SdnList.class);
 		xStream.alias("publshInformation", PublshInformation.class);
