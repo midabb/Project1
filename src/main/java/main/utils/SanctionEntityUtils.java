@@ -16,7 +16,7 @@ import main.model.eu.SanctionEntity;
 
 public class SanctionEntityUtils {
 
-	private static final String path = "/Users/mida/Desktop/sanctionEntities.xml";
+	private static final String path = "path_to_destination_folder_where_to_download_file.xmll";
 
 	private XStream xStream;
 

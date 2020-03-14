@@ -16,7 +16,7 @@ import main.model.un.Individuals;
 
 public class ConsolidatedListUtils {
 	
-	private static final String path = "/Users/mida/Desktop/consolidatedList.xml";
+	private static final String path = "path_to_destination_folder_where_to_download_file.xml";
 
 	private XStream xStream;
 

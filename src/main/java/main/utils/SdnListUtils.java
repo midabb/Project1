@@ -14,7 +14,7 @@ import main.model.SdnList;
 
 public class SdnListUtils {
 	
-	private static final String path = "/Users/mida/Desktop/sdnList.xml";
+	private static final String path = "path_to_destination_folder_where_to_download_file.xml";
 
 	private XStream xStream;
 
